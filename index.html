@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=check,content_copy"
+    />
+    <title>text flipper</title>
+  </head>
+  <body>
+    <div id="app">
+      <span
+        class="textarea input"
+        role="textbox"
+        dir="rtl"
+        contenteditable
+        autofocus
+      ></span>
+      <span class="textarea output" role="textbox" dir="ltr"></span>
+      <div class="button-container">
+        <button class="copy-button material-symbols-outlined">
+          content_copy
+        </button>
+      </div>
+    </div>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0%;
+        padding: 0%;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      #app {
+        width: 90%;
+        margin: auto;
+        padding-top: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .textarea {
+        min-height: 150px;
+        border-radius: 15px;
+        padding: 20px;
+        font-size: 2.5rem;
+        font-family: Arial, Helvetica, sans-serif;
+        outline: none;
+        border: none;
+      }
+
+      .textarea.input:empty::before {
+        content: "תכתוב פה משהו";
+        color: gray;
+      }
+
+      .textarea.output:empty::before {
+        content: "ךפהתי והשמהו";
+        color: gray;
+      }
+
+      .textarea.output {
+        background-color: #eee;
+        word-wrap: break-word;
+      }
+
+      .material-symbols-outlined {
+        border-radius: 10px;
+        padding: 10px;
+        background-color: #eee;
+        cursor: pointer;
+        border: none;
+        /* user-select: none; */
+        float: right;
+        color: #555;
+      }
+
+      .material-symbols-outlined:focus {
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+
+    <script>
+      /** @type {HTMLSpanElement} */
+      const inputTextarea = document.querySelector(".input");
+      /** @type {HTMLSpanElement} */
+      const outputTextarea = document.querySelector(".output");
+      /** @type {HTMLSpanElement} */
+      const copyButton = document.querySelector(".copy-button");
+
+      const minFontSize = 1;
+      let fontSize = 3;
+
+      inputTextarea.oninput = () => {
+        // reverse text
+        let text = inputTextarea.innerText;
+        let textReversed = text.split("").reverse().join("");
+        outputTextarea.innerText = textReversed;
+      };
+
+      let timeoutId = -1;
+      copyButton.onmousedown = () => {
+        const textReversed = outputTextarea.innerText;
+        navigator.clipboard.writeText(textReversed).then(() => {
+          clearTimeout(timeoutId);
+          copyButton.innerText = "check";
+          timeoutId = setTimeout(
+            () => (copyButton.innerText = "content_copy"),
+            1000
+          );
+        });
+      };
+    </script>
+  </body>
+</html>
